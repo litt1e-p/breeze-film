@@ -1,0 +1,121 @@
+*{
+			font-size:12px;
+		}
+		body {
+		    /* font-family:verdana,helvetica,arial,sans-serif; */
+		    font-family: "Microsoft YaHei",Verdana,tahoma,Helvetica,Arial;
+		    padding:20px;
+		    font-size:12px;
+		    margin:0;
+		}
+
+		a {
+		    text-decoration: none;
+		    outline: medium none;
+		}
+		a:hover {
+		    text-decoration: none;
+		}
+
+		h2 {
+		    font-size:18px;
+		    font-weight:bold;
+		    margin:0;
+		    margin-bottom:15px;
+		}/* 
+		.demo-info{
+			padding:0 0 12px 0;
+		}
+		.demo-tip{
+			display:none;
+		}
+		 */
+		.navlist{
+		    list-style-type: none;
+		    margin: 0;
+		    padding-left: 10px;
+		    /* border: 1px solid red; */
+		}
+
+		.navlist li {
+    		padding: 0;
+    		/* border: 1px solid #ccc; */
+    		margin-top: 5px;
+		}
+		.navlist li a {
+		    line-height: 24px;
+		    text-decoration: none;
+		}
+
+		.icon{
+			background:url(../images/icons/tabicons.png) no-repeat;
+		    display: inline-block;
+		    line-height: 18px;
+		    width: 18px;
+		    margin-right: 3px;
+		}
+
+.icon-sys{ background-position:0px -200px;}
+.icon-set{ background-position:-380px -200px;}
+.icon-add{background-position: -20px 0px;} 
+
+.icon-nav{background-position: -100px -20px; }
+.icon-users{background-position: -100px -480px;}
+.icon-switch{background-position: -60px -380px;}
+.icon-rule{background-position: -180px -460px;}
+.icon-msn{background-position: -80px -420px;}
+.icon-role{background-position: -360px -200px;}
+.icon-log{background-position: -380px -80px;}
+
+.icon-delete{ background-position:-140px -120px;}
+.icon-edit{ background-position:-380px -320px;}
+.icon-magic{ background-position:0px -500px;}
+.icon-database{ background-position:-20px -140px;}
+.icon-all{ background-position:-200px -20px;}
+.icon-verify{ background-position:-400px -180px;}
+
+
+.fl {
+    float: left;
+}
+.fr {
+    float: right;
+}
+
+.fr a{
+	margin-right: 10px;
+}
+
+.topLine {
+    background: url("../images/top_B_bg.jpg") repeat-x scroll left center rgba(0, 0, 0, 0);
+    height: 40px;
+    width: auto;
+    padding: 0 20px;
+}
+.ftitle{
+            font-size:14px;
+            font-weight:bold;
+            padding:5px 0;
+            margin-bottom:10px;
+            border-bottom:1px solid #ccc;
+        }
+.fitem{
+    margin-bottom:5px;
+}
+.fitem label{
+    display:inline-block;
+    width:80px;
+}
+.fitem input{
+    width:160px;
+}
+.span_黄药师{
+	display: inline-block;
+	line-height: 30px;
+	padding: 5px;
+	color: #0e2d5f;
+	font-size: 13px;
+}
+.divide{
+	margin: 5px;
+}

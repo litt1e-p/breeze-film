@@ -1,0 +1,262 @@
+<!-- include kindeditor -->
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui_clientpagination.js"></script>    
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/Common/kindeditor/themes/default/default.css"/>  
+    <script type="text/javascript" src="__PUBLIC__/Common/kindeditor/kindeditor-min.js"></script>    
+    <script type="text/javascript" src="__PUBLIC__/Common/kindeditor/lang/zh_CN.js"></script>  
+    <script type="text/javascript" src="__PUBLIC__/Common/easycrossoverkindeditor.js"></script> 
+<body>
+    <table id="dg" title="文章列表" class="easyui-datagrid" style="width:100%;" url="{:U('Article/articleList')}"  toolbar="#toolbarArticle" pagination="true" pageSize='15' pageNumber='1' multiSort='true' sortOrder="desc" pageList="[2,5,10,15,20,25,30,40,50]" rownumbers="true" fitColumns="true" singleSelect="true">
+        <thead>
+            <tr>
+                <th field="title" width="50" sortable="true">文章名</th>
+                <th field="author" sortable="true">作者</th>
+                <th field="content" width="50">内容</th>
+                <th field="film_num" width="50">所属期刊</th>
+                <th field="created" width="50" formatter="timestampToDateTime" sortable="true">创建时间</th>
+                <th field="statDesc">状态</th>
+            </tr>
+        </thead>
+    </table>
+
+    <div id="toolbarArticle">
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="newItemModal()">添加</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="editItemModal()">编辑</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="deleteVol()">删除</a>
+       
+        <form id="fmSearch" method="post" novalidate style="display:inline-block;margin-left:50px;">
+             <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon icon-all" plain="true" onclick="showAll()">全部</a>     
+            <input id='searchBox' class="easyui-searchbox" data-options="height:30,menu:'#searchboxSelect',searcher:doSearch"  style="width:300px"/>
+                <div id="searchboxSelect">
+                    <div data-options="name:'title'">文章名</div>
+                    <div data-options="name:'author'">作者</div>
+                </div>
+        
+        </form>
+    </div>
+    
+    <!-- 文章添加 -->
+    <div id="dlgArticleAdd" class="easyui-window" title="添加文章" style="width:700px;padding:10px 20px"
+            closed="true" buttons="#dlgArticleAdd-buttons"  modal="true">
+        <form id="fm" method="post" novalidate>
+            <div class="fitem">
+                <label>文章名</label>
+                <textarea id="titleAdd" name="title" class="easyui-validatebox textbox" data-options="required:true" style="width:480px;height:40px;"></textarea>
+            </div>
+            <div class="fitem">
+                <label>作者</label>
+                <input name="author" id="authorAdd" type="text" class="easyui-textbox" data-options="required:true,height:30,width:485">
+            </div>
+            <div class="fitem">
+                <label>所属期刊</label>
+                <input class="easyui-validatebox textbox" data-options="required:false" name="vol_id" id="vol_id" url="<?php echo U('Admin/Vol/matchVol');?>"  style="height=30px,width=485px">
+            </div>
+            <div class="fitem">
+                <label>状态:</label>
+                 <select class="easyui-combobox" name="status" id="publishedAdd" data-options="required:true,height:30,width:130">
+                    <option value="0">未发布</option>
+                    <option value="1">已发布</option>
+                    <option value="2">已删除</option>
+                </select>   
+            </div>
+            <div class="fitem">
+                <label>内容</label>
+                <textarea id="contentAdd" name="content" class="easyui-kindeditor" cols="80" rows="12" data-options="required:true" ></textarea>
+            </div>
+        </form>
+    </div>
+    
+    <!-- 文章编辑 -->
+    <div id="dlgEdit" class="easyui-dialog" style="padding:10px 20px;width:700px;padding:10px 20px"
+            closed="true" buttons="#dlgEdit-buttons" modal="true">
+        <form id="fmEdit" method="post" novalidate>
+            <div class="fitem">
+                <label>文章名</label>
+                <textarea id="vol_title" name="title" class="easyui-validatebox textbox" data-options="required:true" style="width:480px;height:40px;"></textarea>
+            </div>
+            <div class="fitem">
+                <label>作者</label>
+                <input name="author" id="author" type="text" class="easyui-textbox" data-options="required:true,height:30,width:485" value="">
+            </div>
+            <div class="fitem">
+                <label>歌曲数量</label>
+                <input name="music_num" id="music_num" type="text" class="easyui-textbox" data-options="required:true,height:30,width:485" value="">
+            </div>
+            <div class="fitem">
+                <label>图片数量</label>
+                <input name="film_num" id="film_num" type="text" class="easyui-textbox" data-options="required:true,height:30,width:485" value="">
+            </div>
+            <div class="fitem">
+                <label>状态:</label>
+                 <select class="easyui-combobox" name="published" id="pubSta" data-options="height:30">
+                    <option value="2">已删除</option>
+                    <option value="1">已发布</option>
+                    <option value="0">未发布</option>
+                </select>   
+            </div>
+        </form>
+    </div>
+
+    <!-- 添加文章 -->
+    <div id="dlgArticleAdd-buttons">
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" onclick="addItem()" style="width:90px">添加</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlgArticleAdd').dialog('close')" style="width:90px">取消</a>
+    </div>
+    <!-- /添加文章 -->  
+
+    <!-- 文章编辑 -->
+    <div id="dlgEdit-buttons">
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" onclick="editItem()" style="width:90px">保存</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlgEdit').dialog('close')" style="width:90px">取消</a>
+    </div>
+    <!-- /文章编辑 -->
+
+   <script type="text/javascript">
+        var url;
+        $('#vol_id').combogrid({
+                width: 300,
+                mode: 'remote',
+                url: "<?=U('Admin/Vol/matchVol')?>",
+                idField: 'id',
+                prompt: '输入期刊名部分字符进行查找',
+                textField: 'title',
+                pageSize: 15,
+                hasDownArrow: false,
+                columns: [[
+                        {field: 'id', title: '期刊id', width: 100, sortable: false},
+                        {field: 'title', title: '期刊名', width: 70, sortable: false}
+                    ]]
+        });
+        //添加文章对话窗
+        function newItemModal(){
+            $('#dlgArticleAdd').dialog('open').dialog('setTitle','添加文章');
+            $('#fm').form('clear');
+            $('#groupid').combobox('select',2);
+            url ="{:U('Article/addArticle')}";
+        }
+        //编辑文章对话窗
+        function editItemModal(){
+            var row = $('#dg').datagrid('getSelected');
+            if(row == null){
+                $.messager.alert('提示消息','请选择一行记录','error');return false;
+            }
+            $("#pubSta option[text='" + row.published + "']").attr("selected", true);
+            $('#dlgEdit').dialog('open').dialog('setTitle','编辑文章');
+            $('#fmEdit').form('load',row);
+            url ="{:U('Vol/editVol','','')}"+'?id='+row.id;
+        }
+
+        //添加文章
+        function addItem(){
+            $('#fm').form('submit',{
+                url: url,
+                onSubmit: function(){
+                    return $(this).form('validate');
+                },
+                success: function(result){
+                    var result=eval('('+result+')');
+                    if (!result.status){
+                        $.messager.confirm('错误提示',result.message,function(r){
+                            // $('#dlg').dialog('close');  
+                        });
+                    } else {
+                        $.messager.show({
+                            title:'提示信息' ,
+                            msg:result.message
+                        });
+                        $('#dlg').dialog('close');        // close the dialog
+                        $('#dg').datagrid('reload');    // reload the user data
+                    }
+                }
+            });
+        }
+
+        //编辑文章
+        function editItem(){
+            $('#fmEdit').form('submit',{
+                url: url,
+                onSubmit: function(){
+                    return $(this).form('validate');
+                },
+                success: function(result){
+                    var result=eval('('+result+')');
+                    if (!result.status){
+                        $.messager.confirm('错误提示',result.message,function(r){
+                            // $('#dlgEdit').dialog('close');  
+                        });
+                    }else{
+                        $.messager.show({
+                            title:'提示信息' ,
+                            msg:result.message
+                        });
+                        $('#dlg').dialog('close'); 
+                        $('#dlgEdit').dialog('close');        // close the dialog
+                        $('#dg').datagrid('reload');    // reload the user data
+                    }
+                }
+            });
+        }
+
+        //删除文章
+        function deleteVol(){
+            var row = $('#dg').datagrid('getSelected');
+            if(row == null){
+                $.messager.alert('提示消息','请选择一行记录','error');return false;
+            }
+            $.messager.confirm('删除提示','真的要删除此文章吗?',function(r){
+                if (r){
+                    var durl = '{:U("Vol/delVol")}';
+                    $.post(durl, {id:row.id}, function(result){
+                        if (result.status){
+                            $.messager.show({
+                                title:'提示信息' ,
+                                msg:result.message
+                            });
+                            $('#dlg').dialog('close'); 
+                            $('#dg').datagrid('reload');
+                        } else {
+                            $.messager.alert('错误提示',result.message,'error');
+                        }
+                    },'json').error(function(data){
+                        var info=eval('('+data.responseText+')');
+                        $.messager.confirm('错误提示',info.message,function(r){
+                            
+                        });
+                    });
+                }
+            });
+        }
+
+        //搜索
+        function doSearch(value,name){
+            if(value==''){
+                $.messager.alert('搜索提示','搜索内容不能为空!','error');
+            }else{
+                var searchName=$('#searchBox').searchbox('getName');
+                var searchValue=$('#searchBox').searchbox('getValue');
+                switch(searchName){
+                    case 'title':
+                        $('#dg').datagrid({ queryParams:{title:searchValue}});
+                        break;
+                    case 'author':
+                        $('#dg').datagrid({ queryParams:{author:searchValue}});
+                        break;
+                }
+            }
+        }
+
+        //显示全部数据
+        function showAll(){
+            $('#dg').datagrid({ queryParams:''});
+        }
+
+       
+
+    </script>
+    <style type="text/css">
+        #fm{
+            margin:0;
+            padding:10px;
+        }
+    </style>
+    
+</body>

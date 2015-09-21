@@ -1,0 +1,158 @@
+<body>
+<script type="text/javascript">
+	var authUserUrl="{:U('Auth/userList')}";
+    var authUserDelUrl="{:U('Auth/userDel')}";
+	using('../../../default/js/authUser.js');
+
+    //搜索
+    function authUserSearch(value,name){
+        if(value==''){
+            $.messager.alert('搜索提示','搜索内容不能为空!','error');
+        }else{
+            var searchName=$.trim($('#authUsersearchInput').searchbox('getName'));
+            var searchValue=$.trim($('#authUsersearchInput').searchbox('getValue'));
+            switch(searchName){
+                case 'name':
+                    $('#authUserDatagrid').datagrid({ queryParams:{name:searchValue}});
+                    break;
+                case 'email':
+                    $('#authUserDatagrid').datagrid({ queryParams:{email:searchValue}});
+                    break; 
+                case 'title':
+                    $('#authUserDatagrid').datagrid({ queryParams:{title:searchValue}});
+                    break;
+            }
+        }
+    }
+</script>
+	<table id="authUserDatagrid" toolbar="#tb"></table>
+	<!-- 添加用户 -->
+    <div id="authUserAddDialog" class="easyui-dialog" style="width:400px;padding:10px 20px"
+            closed="true" buttons="#authUserAddButtons"  modal="true">
+        <form id="authUserAddForm" method="post" novalidate>          
+            <div class="fitem">
+                <label>用&nbsp;&nbsp;户&nbsp;&nbsp;名</label>
+                <input name="name" class="easyui-textbox" data-options="required:true,delay:1000,height:30,validType:['length[5,20]','exists[\'用户名\',\'{:U('Auth/checkUser','','')}\']']" />
+            </div>
+            <div class="fitem">
+                <label>密&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;码</label>
+                <input name="pwd" id="authUserPwd" type="password"  class="easyui-textbox" data-options="required:true,validType:['length[6,16]','equals[\'#authUserRepwd\']'],height:30" />
+            </div>
+            <div class="fitem">
+                <label>确认密码</label>
+                <input name="repwd" id="authUserRepwd" type="password" class="easyui-textbox" data-options="height:30,required:true,validType:['length[6,16]','equals[\'#authUserPwd\']']" />
+            </div>
+            <div class="fitem">
+                <label>姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名</label>
+                <input name="realname" id="authUserRealname" class="easyui-textbox" data-options="height:30" />
+            </div>
+            <div class="fitem">
+                <label>邮&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;箱</label>
+                <input name="email" id="authUserEmail" class="easyui-textbox" data-options="height:30,validType:['email','exists[\'邮箱\',\'{:U('Auth/checkEmail','','')}\']']" />
+            </div>
+            <div class="fitem">
+                <label>积&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;分</label>
+                <input name="score" id="authUserScore" class="easyui-numberbox" data-options="height:30" />
+            </div>
+            <div class="fitem">
+                <label>角&nbsp;&nbsp;色&nbsp;&nbsp;组</label>
+                <select class="easyui-combobox" name="group" id='authUserGroup' data-options="height:30,required:true,editable:false">
+                    <volist name="groupInfo" id="vo">
+                        <option value="{$vo['id']}">{$vo['title']}</option>
+                    </volist>                         
+                </select>   
+            </div>     
+        </form>
+    </div>
+    <div id="authUserAddButtons">
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" onclick="authUserObj.add('{:U('Auth/userAdd')}')" style="width:90px">添加</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:
+    $('#authUserAddDialog').dialog('close')" style="width:90px">取消</a>
+    </div>
+    <!-- /添加管理员 -->
+    <!-- 搜索栏 -->
+    <div id="tb">        
+        <form id="authUserSearchForm" method="post" novalidate>
+             <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon icon-all" plain="true" onclick="authUserObj.showAll()">全部</a>     
+            <input id='authUsersearchInput' class="easyui-searchbox" data-options="height:30,menu:'#authUserSearchbox',searcher:authUserSearch"  style="width:300px"/>
+            <div id="authUserSearchbox">
+                <div data-options="name:'name',iconCls:'icon icon-msn'">用户名</div>
+                <div data-options="name:'email',iconCls:'icon-email'">邮箱</div>
+                <div data-options="name:'title',iconCls:'icon-group_go'">角色</div>
+            </div>
+        </form>
+        <a href="javascript:void(0)" onclick="authUserObj.addBar()" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true">添加</a>
+        <a href="javascript:void(0)" onclick="authUserObj.editBar()" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true">修改</a>
+        <a href="javascript:void(0)" onclick="authUserObj.removeBar()" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true">删除</a>
+        <a href="javascript:void(0)" onclick="authUserObj.switchBar()" class="easyui-linkbutton" data-options="iconCls:'icon icon-switch',plain:true">移动</a>
+    </div>
+    <!-- /搜索栏 -->
+    <!-- 编辑用户 -->
+    <div id="authUserEditDialog" class="easyui-dialog" style="width:400px;padding:10px 20px"
+            closed="true" buttons="#authUserEditButtons"  modal="true">
+        <form id="authUserEditForm" method="post" novalidate>          
+            <div class="fitem">
+                <label>用&nbsp;&nbsp;户&nbsp;&nbsp;名</label>
+                <input name="uid" id="authUserId" type="hidden" />
+                <input name="name" class="easyui-textbox" data-options="disabled:true,height:30" />
+            </div>
+            <div class="fitem">
+                <label>密&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;码</label>
+                <input name="pwd" id="authUserPwdE" type="password"  class="easyui-textbox" data-options="validType:['length[6,16]','equals[\'#authUserRepwdE\']'],height:30" />
+            </div>
+            <div class="fitem">
+                <label>确认密码</label>
+                <input name="repwd" id="authUserRepwdE" type="password" class="easyui-textbox" data-options="height:30,validType:['length[6,16]','equals[\'#authUserPwdE\']']" />
+            </div>
+            <div class="fitem">
+                <label>姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名</label>
+                <input name="realname" id="authUserRealname" class="easyui-textbox" data-options="height:30" />
+            </div>
+            <div class="fitem">
+                <label>邮&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;箱</label>
+                <input name="email" id="authUserEmail" class="easyui-textbox" data-options="height:30,validType:['email','exists[\'邮箱\',\'#authUserId\',\'{:U('Auth/checkEmail','','')}\']']" />
+            </div>
+            <div class="fitem">
+                <label>积&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;分</label>
+                <input name="score" id="authUserScore" class="easyui-numberbox" data-options="height:30" />
+            </div>
+            <div class="fitem">
+                <label>角&nbsp;&nbsp;色&nbsp;&nbsp;组</label>
+                <select class="easyui-combobox" name="groupId" id='authUserGroupEdit' data-options="height:30,required:true,editable:false">
+                    <volist name="groupInfo" id="vo">
+                        <option value="{$vo['id']}">{$vo['title']}</option>
+                    </volist>                         
+                </select>   
+            </div>     
+        </form>
+    </div>
+    <div id="authUserEditButtons">
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" onclick="authUserObj.save('{:U('Auth/userSave')}')" style="width:90px">更新</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:
+    $('#authUserEditDialog').dialog('close')" style="width:90px">取消</a>
+    </div>
+    <!-- /编辑用户 -->    
+
+    <!-- 批量移动用户 -->
+    <div id="authUserMoveDialog" class="easyui-dialog" style="width:400px;padding:10px 20px"
+            closed="true" buttons="#authUserMoveButtons"  modal="true">
+        <form id="authUserMoveForm" method="post" novalidate>          
+            <div id="authUserMovePanel" class="easyui-panel" title="用户"></div>
+            <div class="divide"></div>
+            <div class="fitem">
+                <label>角色组</label>
+                <select class="easyui-combobox" name="groupId" id='authUserGroupMove' data-options="height:30,required:true,editable:false">
+                    <volist name="groupInfo" id="vo">
+                        <option value="{$vo['id']}">{$vo['title']}</option>
+                    </volist>                         
+                </select>
+            </div>
+        </form>
+    </div>
+    <div id="authUserMoveButtons">
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" onclick="authUserObj.move('{:U('Auth/userMove')}')" style="width:90px">移动</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:
+    $('#authUserMoveDialog').dialog('close')" style="width:90px">取消</a>
+    </div>
+    <!-- /批量移动用户 -->
+</body>

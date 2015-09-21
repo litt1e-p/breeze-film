@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>后台首页</title>
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/Common/easyui/themes/default/easyui.css">
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/Common/easyui/css/admin.css">
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/Common/easyui/themes/icon.css">
+
+</head>
+<body>
+	<div class="easyui-layout" id="layout" data-options="fit:true">
+		<div  data-options="region:'north'" border="false" >
+			<div class="topLine">
+							<p class="fl"><span class="icon icon-users">&nbsp;</span>用户：管理员({$Think.session.username})&nbsp;&nbsp;&nbsp;<span class="icon icon-role">&nbsp;</span>角色：{$Think.session.gname}&nbsp;&nbsp;&nbsp;<span class="icon icon-clock">&nbsp;</span>登陆时间：{$Think.session.logintime|date='Y-m-d H:i:s',###}</p>
+							<p class="fr">
+								<span class="icon icon-arrow_refresh">&nbsp;</span><a  title="更新缓存" href="javascript:void(0)" onclick="clearCache()">更新缓存</a>
+								<span class="icon icon-email">&nbsp;</span><a title="消息" href="#">消息</a>
+								<span class="icon icon-set">&nbsp;</span><a title="设置" href="#">设置</a>
+								<span class="icon icon-door_out">&nbsp;</span><a title="退出" href="javascript:void(0)" onclick="logout()">退出</a>
+							</p>
+			</div>
+			<!-- <div style="height:50px;"></div> -->
+		</div>
+		<!-- <div data-options="region:'south',split:true" style="height:1px;">底部</div> -->
+
+		<div data-options="region:'west',split:true," title="导航菜单" style="width:220px;">
+		 	<div class="easyui-accordion">
+		        <!-- <div title="系统模块" data-options="iconCls:'icon-ok'" style="overflow:auto;padding:10px;">
+		            
+		        </div> -->
+		        <div title="期刊模块" data-options="iconCls:'icon-fm_article_folder', selected:true" style="padding:10px;">
+		           	<ul class="navlist">
+		           		<li>
+							<a href="javascript:void(0)" onclick="showTab('{:U('Vol/index')}','期刊管理')"><span class="icon icon-fm_vol">&nbsp;</span><span class="nav">期刊管理</span></a>
+						</li>
+						<li>
+							<a href="javascript:void(0)" onclick="showTab('{:U('Article/index')}','文章管理')"><span class="icon icon-fm_article">&nbsp;</span><span class="nav">文章管理</span></a>
+						</li>
+						<li>
+							<a href="javascript:void(0)" onclick="showTab('{:U('Music/index')}','音乐管理')"><span class="icon icon-fm_music">&nbsp;</span><span class="nav">音乐管理</span></a>	
+						</li>
+						<li>
+							<a href="javascript:void(0)" onclick="showTab('{:U('Film/index')}','图片管理')"><span class="icon icon-fm_image">&nbsp;</span><span class="nav">图片管理</span></a>
+							
+						</li>
+					</ul>
+		        
+		        </div>
+		        <div title="权限模块" data-options="iconCls:'icon-help'" style="padding:10px;">
+		           	<ul class="navlist">
+						<li>
+							<a href="javascript:void(0)" onclick="showTab('{:U('Auth/index')}','用户管理')"><span class="icon icon-users">&nbsp;</span><span class="nav">用户管理</span></a>
+						</li>
+						<li>
+							<a href="javascript:void(0)" onclick="showTab('{:U('Auth/group')}','角色管理')"><span class="icon icon-group_go">&nbsp;</span><span class="nav">角色管理</span></a>
+						</li>
+						<li>
+							<a href="javascript:void(0)" onclick="showTab('{:U('Auth/rule')}','规则管理')"><span class="icon icon-rule">&nbsp;</span><span class="nav">规则管理</span></a>
+						</li>
+					</ul>
+		        </div>
+		        <div title="会员模块" data-options="iconCls:'icon-search'" style="padding:10px;">
+					<ul class="navlist">
+						<li>
+							<a href="javascript:void(0)" onclick="showTab('{:U('Member/index')}','会员管理')"><span class="icon icon-users">&nbsp;</span><span class="nav">会员管理</span></a>
+						</li>
+						<li>
+							<a href="javascript:void(0)" onclick="showTab('{:U('Member/group')}','管理会员组')"><span class="icon icon-group_go">&nbsp;</span><span class="nav">会员组管理</span></a>
+						</li>
+						<!-- <li>
+							<a rel="http://hxling.cnblogs.com" href="#" ref="12"><span class="icon icon-role">&nbsp;</span><span class="nav">资金账户</span></a>
+						</li>
+						
+						<li>
+							<a rel="http://hxling.cnblogs.com" href="#" ref="12"><span class="icon icon-set">&nbsp;</span><span class="nav">资金记录</span></a>
+						</li> -->
+					</ul>
+		        </div>
+		        <!-- <div title="积分模块" data-options="iconCls:'icon-search'" style="padding:10px;">
+		        					<ul class="navlist">
+		        						<li>
+		        							<a href="javascript:void(0)" onclick="showTab('{:U('Member/index')}','会员管理')"><span class="icon icon-users">&nbsp;</span><span class="nav">会员管理</span></a>
+		        						</li>
+		        						<li>
+		        							<a href="javascript:void(0)" onclick="showTab('{:U('Member/group')}','管理会员组')"><span class="icon icon-group_go">&nbsp;</span><span class="nav">会员组管理</span></a>
+		        						</li>
+		        						<li>
+		        							<a rel="http://hxling.cnblogs.com" href="#" ref="12"><span class="icon icon-role">&nbsp;</span><span class="nav">积分管理</span></a>
+		        						</li>
+		        
+		        						<li>
+		        							<a rel="http://hxling.cnblogs.com" href="#" ref="12"><span class="icon icon-set">&nbsp;</span><span class="nav">积分等级</span></a>
+		        						</li>
+		        					</ul>
+		        </div> -->
+		    </div>
+
+		</div>
+
+	 
+		<div id="bfTabs" class="easyui-tabs" data-options="region:'center',border:'false'">
+		    <div title="首页" style="padding:10px">
+	            <p style="font-size:14px">Hi, {$Think.session.username}</p>	            
+	       	</div>
+		</div>
+	<script type="text/javascript" src="__PUBLIC__/Common/easyui/js/jquery.min.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/Common/easyui/js/jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/Common/easyui/js/easyloader.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/Common/easyui/js/easyui-lang-zh_CN.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/Common/easyui/js/common.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/Common/easyui/js/extends.js"></script>
+
+	<script>
+		function showTab(url,title){
+			if ($('#bfTabs').tabs('exists',title)){
+				$('#bfTabs').tabs('select',title);
+			} else {
+				$('#bfTabs').tabs('add',{
+					title:title,
+					href:url,
+					closable:true,
+					onLoadError:function(data){
+						var info=eval('('+data.responseText+')');
+						$.messager.confirm('错误提示',info.message,function(r){
+							$('#bfTabs').tabs('close',title);
+						});
+						return false;
+					}	
+				});
+			}
+		}
+		//退出
+		function logout(){
+			var url="{:U('Index/logout')}";
+			$.ajax({
+                async:false,
+                type:"get",
+                url:url,
+                success: function(result){
+                	if(result.status) location.href="{:U('Index/index')}";
+                }
+            });
+		}
+
+		//清除缓存
+		function clearCache(){
+			var url="{:U('system/clearCache')}";
+			$.ajax({
+                async:false,
+                type:"get",
+                url:url,
+                success: function(result){
+                	if(result.status) $.messager.confirm('提示消息','缓存更新成功!',function(r){location.href="{:U('Index/index')}";}); 
+                	
+                }
+            });
+		}
+	</script>
+
+</body>
+</html>

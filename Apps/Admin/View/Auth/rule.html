@@ -1,0 +1,137 @@
+<body>
+	<script type="text/javascript">
+        var authRuleUrl="{:U('Auth/ruleList')}";
+		var authRuleDelUrl="{:U('Auth/ruleDel')}";
+        //var errorUrl='{:U("Auth/rule")}';
+        var errorUrl='{:U("Index/index")}';
+        //var errorUrl='{:U("Index/error")}';
+		using('../../../default/js/authRule.js');
+        /*$(function(){
+            $.ajax({
+                //async:false,
+                type:"POST",
+                url:'{:U("Auth/rule")}',
+                data:'',
+                success: function(result){
+                    console.log(result);
+                }
+            });
+        });*/
+	</script>
+	<table id="authRuleDatagrid" toolbar='#authRuleToolBar'></table>
+
+	<!-- 规则添加 -->
+	<div id="authRuleAddDialog" class="easyui-dialog" title="规则添加" style="width:500px;padding:10px 20px"
+        closed="true" buttons="#authRuleAddButtons"  modal="true">
+         <form id="authRuleAddForm" method="post" novalidate>
+         	<div class="fitem">
+                <label>规则标识</label>
+                <input name="name" class="easyui-textbox" data-options="height:30,delay:1000,required:true,width:200,validType:['length[2,80]','exists[\'规则标识\',\'#authRuleId\',\'{:U('Auth/checkRule','','')}\']']"/>
+            </div>
+         	<div class="fitem">
+                <label>规则简述</label>
+                <input name="title" class="easyui-textbox" data-options="height:30,required:true,width:200,validType:['length[2,20]']" />
+            </div>
+            <div class="fitem">
+                <label>附加条件</label>
+                <input name="condition" class="easyui-textbox" data-options="height:30,width:200"/>
+            </div>
+            <div class="fitem">
+                <label>状态</label>
+               <select class="easyui-combobox" name="status" id='authRuleStatus' data-options="required:true,height:30,width:200,editable:false">
+               		<option value="0">禁用</option>   
+                    <option value="1">启用</option>  
+                </select>
+            </div>
+            <div class="fitem">
+                <label>所属模块</label>
+               <select class="easyui-combobox" name="pid" id='authRuleMid' data-options="required:true,height:30,width:200,editable:false">	
+               		<volist name="authRuleInfo" id="vo">
+               			<option value="{$vo['pid']}">{$vo['title']}</option>   
+               		</volist>
+                </select>
+            </div>
+         </form>
+    </div>
+    <div id="authRuleAddButtons">
+    	<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" onclick="authRuleObj.add('{:U('Auth/ruleAdd')}')" style="width:90px">添加</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#authRuleAddDialog').dialog('close')" style="width:90px">取消</a>
+    </div>
+	<!-- /规则添加 -->
+
+    <!-- 规则编辑 -->
+    <div id="authRuleEditDialog" class="easyui-dialog" title="规则编辑" style="width:500px;padding:10px 20px"
+        closed="true" buttons="#authRuleEditButtons"  modal="true">
+         <form id="authRuleEditForm" method="post" novalidate>
+            <div class="fitem">
+                <label>规则标识</label>
+                <input type="hidden" id="authRuleId" name="id">
+                <input name="name" class="easyui-textbox" data-options="height:30,required:true,width:200,validType:['length[2,80]','exists[\'规则标识\',\'#authRuleId\',\'{:U('Auth/checkRule','','')}\']']"/>
+            </div>
+            <div class="fitem">
+                <label>规则简述</label>
+                <input name="title" class="easyui-textbox" data-options="height:30,required:true,width:200,validType:['length[2,20]']" />
+            </div>
+            <div class="fitem">
+                <label>附加条件</label>
+                <input name="condition" class="easyui-textbox" data-options="height:30,width:200"/>
+            </div>
+            <div class="fitem">
+                <label>状态</label>
+               <select class="easyui-combobox" name="status" data-options="required:true,height:30,width:200,editable:false">
+                    <option value="0">禁用</option>   
+                    <option value="1">启用</option>  
+                </select>
+            </div>
+            <div class="fitem">
+                <label>所属模块</label>
+               <select class="easyui-combobox" name="pid" data-options="required:true,height:30,width:200,editable:false">    
+                    <volist name="authRuleInfo" id="vo">
+                        <option value="{$vo['pid']}">{$vo['title']}</option>   
+                    </volist>
+                </select>
+            </div>
+         </form>
+    </div>
+    <div id="authRuleEditButtons">
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" onclick="authRuleObj.save('{:U('Auth/ruleSave')}')" style="width:90px">添加</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#authRuleEditDialog').dialog('close')" style="width:90px">取消</a>
+    </div>
+    <!-- /规则编辑 -->
+    <!-- 工具栏 -->
+    <div id="authRuleToolBar">        
+        <form id="authRuleSearchForm" method="post" novalidate>
+             <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon icon-all" plain="true" onclick="authRuleObj.showAll()">全部</a>     
+            <input id='authRulesearchInput' class="easyui-searchbox" data-options="height:30,menu:'#authRuleSearchbox',searcher:authRuleSearch"  style="width:300px"/>
+            <div id="authRuleSearchbox">
+                <div data-options="name:'name',iconCls:'icon icon-msn'">规则标识</div>
+                <div data-options="name:'title',iconCls:'icon-email'">规则简述</div>
+            </div>
+        </form>
+        <a href="javascript:void(0)" onclick="authRuleObj.addBar()" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true">添加</a>
+        <a href="javascript:void(0)" onclick="authRuleObj.editBar()" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true">修改</a>
+        <a href="javascript:void(0)" onclick="authRuleObj.removeBar()" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true">删除</a>
+    </div>
+    <!-- /工具栏 -->
+
+    <script type="text/javascript">
+        //搜索
+        function authRuleSearch(value,name){
+            if(value==''){
+                $.messager.alert('搜索提示','搜索内容不能为空!','error');
+            }else{
+                var searchName=$.trim($('#authRulesearchInput').searchbox('getName'));
+                var searchValue=$.trim($('#authRulesearchInput').searchbox('getValue'));
+                switch(searchName){
+                    case 'name':
+                        $('#authRuleDatagrid').datagrid({ queryParams:{name:searchValue}});
+                        break;
+                    case 'title':
+                        $('#authRuleDatagrid').datagrid({ queryParams:{title:searchValue}});
+                        break; 
+                }
+            }
+        }
+    </script>
+
+</body>
